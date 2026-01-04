@@ -16,8 +16,8 @@ function getClient (options) {
     // debug: true
   }))
 
-  ns.axios.post = jest.fn().mockImplementation(ns.axios.post)
-  ns.post = jest.fn().mockImplementation(ns.post)
+  ns.axios.get = jest.fn().mockImplementation(ns.axios.get)
+  ns.get = jest.fn().mockImplementation(ns.get)
 
   return ns
 }
@@ -29,7 +29,7 @@ function getMockClient (fixture, options) {
   let ns = new NameSilo(options)
   let inTestSuite = typeof jest !== 'undefined'
 
-  const mockPost = (action, inputs) => {
+  const mockGet = (action, config) => {
     return new Promise(async (resolve) => {
       let data = await loadFixture(fixture || action)
       resolve({ data })
@@ -37,10 +37,10 @@ function getMockClient (fixture, options) {
   }
 
   ns.setHTTPClient({
-    post: inTestSuite ? jest.fn().mockImplementation(mockPost) : mockPost
+    get: inTestSuite ? jest.fn().mockImplementation(mockGet) : mockGet
   })
 
-  ns.post = inTestSuite ? jest.fn().mockImplementation(ns.post) : ns.post
+  ns.get = inTestSuite ? jest.fn().mockImplementation(ns.get) : ns.get
   return ns
 }
 

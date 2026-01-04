@@ -55,21 +55,21 @@ describe('NameSilo', () => {
     })
   })
 
-  describe(`post`, () => {
+  describe(`get`, () => {
     it('should map boolean `private`/`auto_renew` to 1/0', async () => {
       let ns = getMockClient('registerDomain')
       await ns.registerDomain('example.com', 1, { private: true, auto_renew: false })
 
-      expect(ns.axios.post).toHaveBeenCalledTimes(1)
-      expect(ns.axios.post).toHaveBeenCalledWith('registerDomain', 'private=1&auto_renew=0&domain=example.com&years=1')
+      expect(ns.axios.get).toHaveBeenCalledTimes(1)
+      expect(ns.axios.get).toHaveBeenCalledWith('registerDomain', { params: { private: 1, auto_renew: 0, domain: 'example.com', years: 1 } })
     })
 
     it('should map boolean `private`/`auto_renew` to 1/0', async () => {
       let ns = getMockClient('registerDomain')
       await ns.registerDomain('example.com', 1, { private: false, auto_renew: true })
 
-      expect(ns.axios.post).toHaveBeenCalledTimes(1)
-      expect(ns.axios.post).toHaveBeenCalledWith('registerDomain', 'private=0&auto_renew=1&domain=example.com&years=1')
+      expect(ns.axios.get).toHaveBeenCalledTimes(1)
+      expect(ns.axios.get).toHaveBeenCalledWith('registerDomain', { params: { private: 0, auto_renew: 1, domain: 'example.com', years: 1 } })
     })
 
     it('should attach `success` property to response', async () => {
@@ -127,16 +127,16 @@ describe('NameSilo', () => {
       let ns = getMockClient('getDomainInfo')
       await ns.getDomainInfo('example.com')
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('getDomainInfo', { domain: 'example.com' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('getDomainInfo', { domain: 'example.com' })
     })
 
     it(`should properly handle recieving an object with "singleParam" definition option`, async () => {
       let ns = getMockClient('getDomainInfo')
       await ns.getDomainInfo({ domain: 'example.com' })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('getDomainInfo', { domain: 'example.com' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('getDomainInfo', { domain: 'example.com' })
     })
 
     // flattenArrays
@@ -144,24 +144,24 @@ describe('NameSilo', () => {
       let ns = getMockClient('checkTransferAvailability')
       await ns.checkTransferAvailability('example.com,example.net')
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
     })
 
     it(`should accept a single Array parameter and join it with commans`, async () => {
       let ns = getMockClient('checkTransferAvailability')
       await ns.checkTransferAvailability(['example.com', 'example.net'])
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
     })
 
     it(`should accept an Array and join it with commas`, async () => {
       let ns = getMockClient('checkTransferAvailability')
       await ns.checkTransferAvailability({ domains: ['example.com', 'example.net'] })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('checkTransferAvailability', { domains: 'example.com,example.net' })
     })
   })
 
@@ -170,16 +170,16 @@ describe('NameSilo', () => {
       let ns = getMockClient(('changeNameServers'))
       await ns.changeNameServers({ domain: 'example.com', ns1: 'ns1.example.com', ns2: 'ns2.example.com' })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('changeNameServers', { domain: 'example.com', ns1: 'ns1.example.com', ns2: 'ns2.example.com' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('changeNameServers', { domain: 'example.com', ns1: 'ns1.example.com', ns2: 'ns2.example.com' })
     })
 
     it(`should accept array of nameservers as second param`, async () => {
       let ns = getMockClient(('changeNameServers'))
       await ns.changeNameServers('example.com', ['ns1.example.com', 'ns2.example.com'])
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post).toHaveBeenCalledWith('changeNameServers', { domain: 'example.com', ns1: 'ns1.example.com', ns2: 'ns2.example.com' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get).toHaveBeenCalledWith('changeNameServers', { domain: 'example.com', ns1: 'ns1.example.com', ns2: 'ns2.example.com' })
     })
   })
 
@@ -188,15 +188,15 @@ describe('NameSilo', () => {
       let ns = getMockClient('checkRegisterAvailability')
       await ns.checkRegisterAvailability('example.com')
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domains: 'example.com' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domains: 'example.com' })
     })
 
     it(`should accept an array as input`, async () => {
       let ns = getMockClient('checkRegisterAvailability')
       let data = await ns.checkRegisterAvailability(['example.com', 'example.net'])
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domains: 'example.com,example.net' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domains: 'example.com,example.net' })
     })
 
 
@@ -214,24 +214,24 @@ describe('NameSilo', () => {
       let ns = getMockClient(('registerDomain'))
       await ns.registerDomain('example.com', 1)
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
     })
 
     it(`should accept serial arguments with optional args`, async () => {
       let ns = getMockClient(('registerDomain'))
       await ns.registerDomain('example.com', 1, { payment_id: 1234, coupon: 'abcd' })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1, payment_id: 1234, coupon: 'abcd' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1, payment_id: 1234, coupon: 'abcd' })
     })
 
     it(`should accept a single argument object`, async () => {
       let ns = getMockClient(('registerDomain'))
       await ns.registerDomain({ domain: 'example.com', years: 1 })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
     })
   })
 
@@ -240,24 +240,24 @@ describe('NameSilo', () => {
       let ns = getMockClient(('renewDomain'))
       await ns.renewDomain('example.com', 1)
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
     })
 
     it(`should accept serial arguments with optional args`, async () => {
       let ns = getMockClient(('renewDomain'))
       await ns.renewDomain('example.com', 1, { payment_id: 1234, coupon: 'abcd' })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1, payment_id: 1234, coupon: 'abcd' })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1, payment_id: 1234, coupon: 'abcd' })
     })
 
     it(`should accept a single argument object`, async () => {
       let ns = getMockClient(('renewDomain'))
       await ns.renewDomain({ domain: 'example.com', years: 1 })
 
-      expect(ns.post).toHaveBeenCalledTimes(1)
-      expect(ns.post.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
+      expect(ns.get).toHaveBeenCalledTimes(1)
+      expect(ns.get.mock.calls[0][1]).toEqual({ domain: 'example.com', years: 1 })
     })
   })
 
